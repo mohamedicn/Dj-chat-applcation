@@ -1,0 +1,109 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+
+    <title>bs4 beta friend list - Bootdey.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            margin-top: 20px;
+            background: #FAFAFA;
+        }
+
+        /*==================================================
+  Nearby People CSS
+  ==================================================*/
+
+        .people-nearby .google-maps {
+            background: #f8f8f8;
+            border-radius: 4px;
+            border: 1px solid #f1f2f2;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .people-nearby .google-maps .map {
+            height: 300px;
+            width: 100%;
+            border: none;
+        }
+
+        .people-nearby .nearby-user {
+            padding: 20px 0;
+            border-top: 1px solid #f1f2f2;
+            border-bottom: 1px solid #f1f2f2;
+            margin-bottom: 20px;
+        }
+
+        img.profile-photo-lg {
+            height: 80px;
+            width: 80px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div style="    border-bottom: 1px solid;
+    padding-bottom: 6px;justify-content: center;
+    display: flex;">
+        <h3 class="text-muted prj-name">
+            <span"><a href="/" style="font-size: 30px;
+            font-weight: 900;
+            margin-bottom: 13px;
+            color: white;
+            background: #4b00ff;
+            border-radius: 50%;
+            padding: 6px;
+            text-align: center;
+            text-decoration:none;
+            margin-right: 11px;" class="ks-amount">
+                < </a></span>
+            <span class="fa fa-users fa-2x principal-title"></span>
+            Add Friend
+        </h3>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-11">
+                <div class="people-nearby">
+                    {% for friend in add_friends %}
+                        <div class="nearby-user">
+                            <div class="row" style="justify-content: center;">
+                                <div class="col-md-1 col-sm-2" style="margin-right: 20px;">
+                                    {% if friend.profile.image %}
+                                        <img src="{{ friend.profile.image.url }}" alt="user"
+                                        class="profile-photo-lg" width="40" height="40">
+                                    {% else %}
+                                        <img src="{% static 'user_no_image.png' %}" alt="user"
+                                        class="profile-photo-lg" width="40" height="40">
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-3 col-sm-3">
+                                    <h5><a href="#" class="profile-link">{{ friend.profile.user.first_name }} {{ friend.profile.user.last_name }}</a></h5>
+                                    <p name="user_name" >@ {{friend.profile.user.username }}</p>
+                                    <p class="text-muted">25 mutual friends</p>
+                                </div>
+                                <div class="col-md-2 col-sm-2">
+                                    <a href="{% url 'chat:send_request' slug=friend.profile.slug%}" class="btn btn-primary pull-right">Add Friend</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,106 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+
+
+    <title>Friend Request user list - Bootdey.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+        .list-content {
+            min-height: 300px;
+        }
+
+        .list-content .list-group .title {
+            background: #5bc0de;
+            border: 2px solid #DDDDDD;
+            font-weight: bold;
+            color: #FFFFFF;
+        }
+
+        .list-group-item img {
+            height: 80px;
+            width: 80px;
+        }
+
+        .jumbotron .btn {
+            padding: 5px 5px !important;
+            font-size: 12px !important;
+        }
+
+        .prj-name {
+            color: #5bc0de;
+        }
+
+        .break {
+            width: 100%;
+            margin: 20px;
+        }
+
+        .name {
+            color: #5bc0de;
+        }
+    </style>
+</head>
+
+<body>
+    <link href="https://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <div class="container bootstrap snippets bootdey">
+        <div class="header">
+            <h3 class="text-muted prj-name">
+                <span"><a href="/" style="font-size: 30px;
+                font-weight: 900;
+                margin-bottom: 13px;
+                color: white;
+                background: #4b00ff;
+                border-radius: 50%;
+                padding: 6px;
+                text-align: center;
+                text-decoration:none;
+                margin-right: 11px;" class="ks-amount">
+                    < </a></span>
+                <span class="fa fa-users fa-2x principal-title"></span>
+                Friend Request
+            </h3>
+        </div>
+        <div class="jumbotron list-content">
+            <ul class="list-group">
+                <li href="#" class="list-group-item title">
+                    Your Friend Request
+                </li>
+                {% for friend_request in friend_requests %}
+                    <li href="#" class="list-group-item text-left">
+                        {% if friend_request.profile.image %}
+                            <img src="{{ friend_request.profile.image.url }}" class="img-thumbnail" alt="Vanessa Tucker" width="40" height="40">
+                        {% else %}
+                            <img src="{% static 'user_no_image.png' %}" class="img-thumbnail" alt="Vanessa Tucker" width="40" height="40">
+                        {% endif %}
+                        <label class="name">
+                            {{ friend_request.profile.user.first_name }} {{ friend_request.profile.user.last_name }}<br>
+                        </label>
+                        <label class="pull-right">
+                            <a class="btn btn-success btn-xs glyphicon glyphicon-ok" href="{% url 'chat:accecpt_friend_request' slug=friend_request.profile.slug%}" title="View"></a>
+                            <a class="btn btn-danger  btn-xs glyphicon glyphicon-trash" href="#" title="Delete"></a>
+                            <a class="btn btn-info  btn-xs glyphicon glyphicon glyphicon-comment" href="#"
+                                title="Send message"></a>
+                        </label>
+                        <div class="break"></div>
+                    </li>
+                {% endfor %}
+                
+            </ul>
+        </div>
+    </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+
+    </script>
+</body>
+
+</html>

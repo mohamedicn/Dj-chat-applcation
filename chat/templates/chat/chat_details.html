@@ -1,0 +1,362 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>bs4 chat messenger - Bootdey.com</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'chat_details.css' %}" />
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="ks-page-content">
+            <div class="ks-page-content-body">
+                <div class="ks-messenger">
+                    <div class="ks-messages ks-messenger__messages">
+                        <div class="ks-header">
+                            <div style="display: flex;" class="ks-description">
+                                <a href="/" style="font-size: 27px;
+                                font-weight: 900;
+                                margin-bottom: 13px;
+                                color: white;
+                                width: 31px;
+                                background: #4b00ff;
+                                height: 31px;
+                                border-radius: 50%;
+                                padding: 6px;
+                                text-align: center;
+                                justify-content: center;
+                                text-decoration:none;
+                                display: flex;
+                                margin-top: 11px;" class="ks-amount">
+                                    < </a>
+                                        <div style="display: flex;margin-left: 5px;
+                                align-items: center;" class="ks-name">{{profile.user.first_name }}
+                                            {{profile.user.last_name }}</div>
+                            </div>
+
+                        </div>
+                        <div class="ks-body ks-scrollable jspScrollable" data-auto-height=""
+                            data-reduce-height=".ks-footer" data-fix-height="32"
+                            style="height: 480px; overflow: hidden; padding: 0px; width: 100%;" tabindex="0">
+                            <div class="jspContainer" style=" height: 481px;">
+                                <div class="jspPane" style="padding: 0px; top: 0px; width: 100%;">
+                                    <ul id="message-list" style="overflow-y: auto;height:470px;" class="ks-items">
+                                        {% for msg in all_messages %}
+                                        {% if msg.msg_sender == user_profile %}
+                                        <li class="ks-item ks-from chat-send">
+                                            <span class="ks-avatar ks-online">
+                                                {% if msg.msg_sender.image %}
+                                                <img src="{{ msg.msg_sender.image.url }}" class="rounded-circle mr-1"
+                                                    alt="{{ msg.msg_sender.user.username }}" width="36" height="36">
+                                                {% else %}
+                                                <img src="{% static 'user_no_image.png' %}" class="rounded-circle mr-1"
+                                                    alt="{{ msg.msg_sender.user.username }}" width="36" height="36">
+                                                {% endif %}
+                                            </span>
+                                            <div class="ks-body">
+                                                <div style="justify-content: end;" class="ks-header">
+                                                    <span class="ks-datetime">{{ msg.send_in }}</span>
+                                                </div>
+                                                <div id="ks-message" style="font-size: .9375rem;line-height: 1.3333;font-weight: 400;justify-content: end;
+                                                        display: flex;" class="ks-message">{{ msg }}</div>
+                                            </div>
+                                        </li>
+                                        {% else %}
+                                        <li class="ks-item ks-self chat-receiv">
+                                            <span class="ks-avatar ks-offline">
+                                                {% if profile.image %}
+                                                <img src="{{ profile.image.url }}" class="rounded-circle mr-1"
+                                                    alt="Vanessa Tucker" width="36" height="36" class="rounded-circle">
+                                                {% else %}
+                                                <img src="{% static 'user_no_image.png' %}" class="rounded-circle mr-1"
+                                                    alt="Vanessa Tucker" width="36" height="36" class="rounded-circle">
+                                                {% endif %}
+                                            </span>
+                                            <div class="ks-body">
+                                                <div style="justify-content: end;" class="ks-header">
+                                                    <span class="ks-datetime">{{ msg.send_in }}</span>
+                                                </div>
+                                                <div style="font-size: .9375rem;line-height: 1.3333;font-weight: 400;"
+                                                    class="ks-message">{{msg}}</div>
+
+
+                                            </div>
+                                        </li>
+
+                                        {% endif %}
+                                        {% endfor %}
+
+                                    </ul>
+                                </div>
+                                <div class="jspVerticalBar">
+                                    <div class="jspCap jspCapTop"></div>
+                                    <div class="jspTrack" style="height: 481px;">
+                                        <div class="jspDrag" style="height: 206px;">
+                                            <div class="jspDragTop"></div>
+                                            <div class="jspDragBottom"></div>
+                                        </div>
+                                    </div>
+                                    <div class="jspCap jspCapBottom"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ks-footer">
+                            <form style="display: flex;
+                            width: 100%;
+                            height: 40px;" method="POST">
+                                {% csrf_token %}
+                                <textarea name="chat_body" id="chat_body" class="form-control"
+                                    placeholder="Type something..."></textarea>
+                                <button type="button" name="send" id="sendButton" style="margin-left: 7px" class="btn btn-primary"
+                                    onclick="sendMessage()">Send</button>
+                                <button style="border: none;margin-left: 7px;background-color: #ffffff;"
+                                    class="btn"><svg aria-hidden="true" class="xsrhx6k" height="35" viewBox="0 0 16 16"
+                                        width="35">
+                                        <path
+                                            d="M16,9.1c0-0.8-0.3-1.1-0.6-1.3c0.2-0.3,0.3-0.7,0.3-1.2c0-1-0.8-1.7-2.1-1.7h-3.1c0.1-0.5,0.2-1.3,0.2-1.8 c0-1.1-0.3-2.4-1.2-3C9.3,0.1,9,0,8.7,0C8.1,0,7.7,0.2,7.6,0.4C7.5,0.5,7.5,0.6,7.5,0.7L7.6,3c0,0.2,0,0.4-0.1,0.5L5.7,6.6 c0,0-0.1,0.1-0.1,0.1l0,0l0,0L5.3,6.8C5.1,7,5,7.2,5,7.4v6.1c0,0.2,0.1,0.4,0.2,0.5c0.1,0.1,1,1,2,1h5.2c0.9,0,1.4-0.3,1.8-0.9 c0.3-0.5,0.2-1,0.1-1.4c0.5-0.2,0.9-0.5,1.1-1.2c0.1-0.4,0-0.8-0.2-1C15.6,10.3,16,9.9,16,9.1z"
+                                            fill="#0084ff"></path>
+                                        <path
+                                            d="M3.3,6H0.7C0.3,6,0,6.3,0,6.7v8.5C0,15.7,0.3,16,0.7,16h2.5C3.7,16,4,15.7,4,15.3V6.7C4,6.3,3.7,6,3.3,6z"
+                                            fill="#0084ff"></path>
+                                    </svg></button>
+                            </form>
+
+                        </div>
+                    </div>
+                    <div class="ks-info ks-messenger__info">
+                        <div class="ks-header">
+                            User Info
+                        </div>
+                        <div class="ks-body">
+                            <div class="ks-item ks-user">
+                                <span class="ks-avatar ks-online">
+                                    {% if profile.image %}
+                                    <img src="{{ profile.image.url }}" class="rounded-circle mr-1" alt="Vanessa Tucker"
+                                        width="36" height="36" class="rounded-circle">
+                                    {% else %}
+                                    <img src="{% static 'user_no_image.png' %}" class="rounded-circle mr-1"
+                                        alt="Vanessa Tucker" width="36" height="36" class="rounded-circle">
+                                    {% endif %}
+                                </span>
+                                <span class="ks-name">
+                                    {{profile.user.first_name }} {{profile.user.last_name }}
+                                </span>
+                            </div>
+                            <div class="ks-item">
+                                <div class="ks-name">Username</div>
+                                <div class="ks-text">
+                                    @{{profile.user.username }}
+                                </div>
+                            </div>
+                            <div class="ks-item">
+                                <div class="ks-name">Email</div>
+                                <div class="ks-text">
+                                    <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
+                                        data-cfemail="107c716562757e3e63717e747f66717c507568717d607c753e737f7d">{{profile.user.email}}</a>
+                                </div>
+                            </div>
+                            <div class="ks-item">
+                                <div class="ks-name">Phone Number</div>
+                                <div class="ks-text">
+                                    {{profile.phone}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ks-footer">
+                            <div class="ks-item">
+                                <div class="ks-name">Created</div>
+                                <div class="ks-text">
+                                    {{profile.user.date_joined }}
+                                </div>
+                            </div>
+                            <div class="ks-item">
+                                <div class="ks-name">Last Activity</div>
+                                <div class="ks-text">
+                                    1 minute ago
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.jspContainer').jScrollPane();
+        });
+
+        function scrollToBottom() {
+            var messageList = $("#message-list");
+            messageList.scrollTop(messageList.prop("scrollHeight"));
+        }
+        $(document).ready(function () {
+            scrollToBottom();
+        });
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+        document.addEventListener('DOMContentLoaded', function () {
+            // Assuming you already have the csrftoken defined earlier in your script
+        
+            // Add an event listener to the textarea
+            document.getElementById('chat_body').addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    // Prevent the default behavior (new line) when Enter key is pressed
+                    event.preventDefault();
+        
+                    // Call the sendMessage function when Enter key is pressed
+                    sendMessage();
+                }
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            // Focus on the textarea when the page loads
+            document.getElementById('chat_body').focus();
+        });
+        function sendMessage() {
+            // Get the value of the textarea
+            var messageTextarea = document.getElementById("chat_body");
+            var message = messageTextarea.value;
+        
+            // Check if the textarea is not empty
+            if (message.trim() !== "") {
+                const data = { msg: message };
+                // Set the correct URL using Django template syntax
+                let url = "{% url 'chat:send_message' slug=profile.slug %}";
+        
+                // Use fetch to send an AJAX request
+                fetch(url, {
+                    method: 'POST',
+                    headers: {'X-CSRFToken': csrftoken},
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    let chat_body = document.getElementById('message-list');
+                    let chatMessage = document.createElement("li");
+                    chatMessage.classList.add("ks-item", "ks-from", "chat-send");
+                
+                    // Assuming 'data' contains both the message and the date, adjust this part accordingly
+                    let messageContent = data.msg;  // Update this line with the correct property
+                    let messageDate = data.send_in;  // Update this line with the correct property
+                    let avatarUrl = data.avatar_url; // Update this line with the correct property
+                
+                    // Format the date as needed, you may want to use a date formatting library for more flexibility
+                    let formattedDate = new Date(messageDate).toLocaleString();
+                
+                    // Create the content with message and date
+                    chatMessage.innerHTML = `
+                        <span class="ks-avatar ks-online">
+                            <img src="${avatarUrl}" class="rounded-circle mr-1" alt="Avatar" width="36" height="36">
+                        </span>
+                        <div class="ks-body">
+                            <div style="justify-content: end;" class="ks-header">
+                                <span class="ks-datetime">${formattedDate}</span>
+                            </div>
+                            <div style="font-size: .9375rem;line-height: 1.3333;font-weight: 400;justify-content: end; display: flex;" class="ks-message">${messageContent}</div>
+                        </div>
+                    `;
+                
+                    chat_body.append(chatMessage);
+                    scrollToBottom();
+        
+                    // Clear the textarea after sending the message
+                    messageTextarea.value = '';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Handle the error as needed
+                });
+            } else {
+                // Handle the case when the message is empty
+            }
+        }
+
+        let counter = 0;
+
+        setInterval(sendReceive, 2000);
+
+        function sendReceive() {
+            const data = { num: counter };
+
+            // Set the correct URL using Django template syntax
+            let url = "{% url 'chat:receive_message' slug=profile.slug %}";
+
+            // Use fetch to send an AJAX request
+            fetch(url, {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrftoken },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                
+                if (data.length === 0) {
+                    console.log("there is no new chat");
+                } else {
+                    let lastMsg = data[data.length - 1];
+
+                    // Check if counter is equal to data length
+                    if (counter === data.length) {
+                        console.log("there is no new chat");
+                    } else {
+                        // Update the counter and append the new message
+                        counter = data.length;
+                        let chat_body = document.getElementById('message-list');
+                        let chatMessage = document.createElement("li");
+                        let timestamp = new Date(lastMsg.send_in);
+                        let formattedTimestamp = `${timestamp.toLocaleDateString()}, ${timestamp.toLocaleTimeString()}`;
+
+                        chatMessage.classList.add("ks-item", "ks-self", "chat-receiv");
+                        chatMessage.innerHTML = `
+                            <span class="ks-avatar ks-offline">
+                                <img src="${lastMsg.avatar_url}" class="rounded-circle mr-1" alt="User Avatar" width="36" height="36">
+                            </span>
+                            <div class="ks-body">
+                                <div style="justify-content: end;" class="ks-header">
+                                    <span class="ks-datetime">${formattedTimestamp}</span>
+                                </div>
+                                <div style="font-size: .9375rem;line-height: 1.3333;font-weight: 400;" class="ks-message">${lastMsg.body}</div>
+                            </div>
+                        `;
+                        chat_body.append(chatMessage);
+                        console.log('Success:', counter);
+                        scrollToBottom();
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                // Handle the error as needed
+            });
+        }
+
+        
+    </script>
+</body>
+
+</html>
